@@ -17,24 +17,24 @@ class OnVoiceStateUpdate(commands.Cog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         # Debug member.id
-        self.self.logger.debug(f"member.id | {member.id} {type(member.id)}")
+        self.logger.debug(f"member.id | {member.id} {type(member.id)}")
 
         if before.channel == None and after.channel != None:
             # Debug check join channel
-            self.self.logger.info(f"{member.name}({member.id}) Joined {after.channel.name}")
+            self.logger.info(f"{member.name}({member.id}) Joined {after.channel.name}")
 
             # Update messages count
             try:
-                self.self.cursor.execute("UPDATE members SET voice_join_time = %s WHERE id = %s", (datetime.now(), member.id))
+                self.cursor.execute("UPDATE members SET voice_join_time = %s WHERE id = %s", (datetime.now(), member.id))
             except Error as e:
-                self.self.logger.error(f"{e}")
+                self.logger.error(f"{e}")
                 return None
             else:
                 self.db_manager.commit()
 
         elif before.channel != None and after.channel == None:
             # Debug check join channel
-            self.self.logger.info(f"{member.name}({member.id}) Left {before.channel.name}")
+            self.logger.info(f"{member.name}({member.id}) Left {before.channel.name}")
         
             # Get member
             try:
