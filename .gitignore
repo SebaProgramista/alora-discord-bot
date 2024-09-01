@@ -1,4 +1,6 @@
 .config.json
 .serviceAccountKey.json
 
-venv
+/bot/.env
+/bot/cogs/__pycache__
+/bot/__pycache__
