@@ -1,19 +1,17 @@
 from discord.ext import commands
-from discord.utils import get
 from discord import app_commands
 import discord
 
-from mysql.connector import Error
-
-from datetime import datetime
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import asc, desc
 
 class Topka(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.logger.info(f"Loaded {self.__class__.__name__} cog")
-        self.db_manager = self.bot.db_manager
         self.logger = self.bot.logger
-        self.cursor = self.db_manager.cursor
+
+        self.session_manager = self.bot.session_manager
 
     @app_commands.command(name="topka", description="Sprawdź topke naszych użytkowników!")
     async def self(self, interaction: discord.Interaction):
@@ -23,36 +21,24 @@ class Topka(commands.Cog):
         embed.set_author(name=f"Topka użytkowników serwera {interaction.user.guild.name}", icon_url=interaction.user.guild.icon.url)
 
         try:
-            self.cursor.execute(f"SELECT * FROM members")
-        except Error as e:
+            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.xp)).all()
+            personal_rank = None
+            top_members = ""
+            for idx, member in enumerate(members_query):
+                # Debug idx member
+                self.logger.debug(f"{idx} {member}")
+
+                # Add new member to ranking
+                top_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(int(member.id)).name}`: {member.xp} XP"
+
+                # Check if member is an author of interaction and set variables
+                if member.id == interaction.user.id: 
+                    personal_rank = idx
+                    personal_xp = member.xp
+        except SQLAlchemyError as e:
             self.logger.error(f"{e}")
-        members_rows = self.cursor.fetchall()
-
-        # Debug members_rows
-        self.logger.debug(f"members_list | {members_rows}")
-
-        personal_rank = None
-        top_members = ""
-        for idx, member in enumerate(members_rows):
-            # Debug idx member
-            self.logger.debug(f"{idx} {member}")
-
-            # Add new member to ranking
-            top_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(int(member["id"])).name}`: {member["xp"]} XP"
-
-            # Check if member is an author of interaction
-            if member["id"] == interaction.user.id: personal_rank = idx
-
-        # Ref to firebase members collection and member doc
-        try:
-            self.cursor.execute(f"SELECT * FROM members WHERE id = %s", (interaction.user.id,))
-        except Error as e:
-            self.logger.error(f"{e}")
-        member_row = self.cursor.fetchone()
-            
-        # Set personal variables
-        if personal_rank != None:
-            personal_xp = member_row["xp"]
+        else:
+            self.session_manager.session.commit()
 
         # Add fields to embed
         embed.add_field(name=f"<:emojired:1275843612566880309> **Personalny ranking**", value=f"{self.bot.EMPTY}{self.bot.BULLET}Przez cały swój pobyt na serwerze \n{self.bot.EMPTY}{self.bot.EMPTY}uzyskałeś `{personal_xp} xp` co usytuowało Cię na `{personal_rank+1}` miejscu", inline=False)

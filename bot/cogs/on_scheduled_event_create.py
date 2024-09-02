@@ -1,10 +1,5 @@
 from discord.ext import commands
-from discord.utils import get
 import discord
-
-from mysql.connector import Error
-
-from datetime import datetime
 
 class OnScheduledEventCreate(commands.Cog):
     def __init__(self, bot: commands.Bot):
