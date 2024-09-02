@@ -17,7 +17,7 @@ Base = declarative_base()
 #     database=config["database"]["database"]
 # )
 
-url_object = "sqlite:///database.db"
+url_object = "sqlite:///.database.db"
 
 engine = create_engine(url_object)
 

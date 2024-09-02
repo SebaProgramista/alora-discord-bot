@@ -1,5 +1,6 @@
 .config.json
 .serviceAccountKey.json
+database.db
 
 /venv
 /bot/cogs/__pycache__
