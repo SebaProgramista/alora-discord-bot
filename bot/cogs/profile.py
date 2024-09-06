@@ -1,20 +1,19 @@
 from discord.ext import commands
-from discord.utils import get
 from discord import app_commands
 import discord
 
 from mysql.connector import Error
+from sqlalchemy import asc, desc
 
-from datetime import datetime
 import math
 
 class Profile(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.logger.info(f"Loaded {self.__class__.__name__} cog")
-        self.db_manager = self.bot.db_manager
         self.logger = self.bot.logger
-        self.cursor = self.db_manager.cursor
+
+        self.session_manager = self.bot.session_manager
         
 
     @app_commands.command(name="profile", description="Sprawdź swój profil!")
@@ -33,41 +32,30 @@ class Profile(commands.Cog):
                 break  # Zakładamy, że użytkownik ma tylko jedną rolę poziomu
 
         # Debug level_role
-        self.logger.debug(f"level_role | {level_role}")
+        self.logger.debug(f"level_role | {level_role}") 
 
-        # Get user data
-        try:
-            self.cursor.execute(f"SELECT * FROM members WHERE id = {interaction.user.id}")
-        except Error as e:
-            self.logger.error(f"{e}")
-            return None
-        query_result = self.cursor.fetchone()
+        member_query_result = self.session_manager.session.query(self.session_manager.member).filter(self.session_manager.member.id == interaction.user.id).one_or_none()
 
         # Set user xp
-        user_xp = query_result["xp"]
+        user_xp = member_query_result.xp
 
-        # Get levels list
-        try:
-            self.cursor.execute("SELECT * from levels ORDER BY required_points ASC")
-        except Error as e:
-            self.logger.error(f"{e}")
-            return None
-        levels_list = self.cursor.fetchall()
+        # Get levels
+        levels_query_result = self.session_manager.session.query(self.session_manager.level).order_by(asc(self.session_manager.level.required_points)).all()
 
-        # Debug levels_list
-        self.logger.debug(levels_list)
+        # Debug levels_query_result
+        self.logger.debug(f"levels_query_result | {levels_query_result}")
 
         # Znalezienie aktualnego i następnego poziomu
         current_level = None
         next_level = None
 
         if level_role == None:
-            next_level = levels_list[0]
+            next_level = levels_query_result[0]
         else:
-            for i, level in enumerate(levels_list):
-                if level["role_id"] == str(level_role.id):
-                    if i + 1 < len(levels_list):
-                        next_level = levels_list[i + 1]
+            for i, level in enumerate(levels_query_result):
+                if level.role_id == level_role.id:
+                    if i + 1 < len(levels_query_result):
+                        next_level = levels_query_result[i + 1]
                     break
 
         # Debug next_level
@@ -79,7 +67,7 @@ class Profile(commands.Cog):
 
         # Dodanie informacji o kolejnym poziomie (jeśli istnieje)
         if next_level:
-            embed.add_field(name=f"<:7956education:1275828349301948467> **Postęp kolejnego poziomu** {"●" * math.floor((user_xp/next_level["required_points"])*10)}{"○" * (10 - math.floor((user_xp/next_level["required_points"])*10))} {math.floor((user_xp/next_level["required_points"])*100)}%", value="", inline=False)
+            embed.add_field(name=f"<:7956education:1275828349301948467> **Postęp kolejnego poziomu** {"●" * math.floor((user_xp/next_level.required_points)*10)}{"○" * (10 - math.floor((user_xp/next_level.required_points)*10))} {math.floor((user_xp/next_level.required_points)*100)}%", value="", inline=False)
 
         await interaction.response.send_message(embed=embed)
 

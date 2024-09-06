@@ -1,19 +1,12 @@
 from discord.ext import commands
-from discord.utils import get
 import discord
 from discord import EventStatus
-
-from mysql.connector import Error
-
-from datetime import datetime
 
 class OnScheduledEventUpdate(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.logger.info(f"Loaded {self.__class__.__name__} cog")
-        self.db_manager = self.bot.db_manager
         self.logger = self.bot.logger
-        self.cursor = self.db_manager.cursor
 
     @commands.Cog.listener()
     async def on_scheduled_event_update(self, before, after):
