@@ -1,4 +1,8 @@
 .config.json
-.serviceAccountKey.json
+serviceAccountKey.json
+database.db
 
-venv
+/venv
+/bot/load_database.py
+/bot/cogs/__pycache__
+/bot/__pycache__
