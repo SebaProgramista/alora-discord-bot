@@ -10,7 +10,7 @@ config = json.load(open(".config.json"))
 Base = declarative_base()
 
 url_object = URL.create(
-    "mysql",
+    "mysql+pymysql",
     host=config["database"]["host"],
     username=config["database"]["user"],
     password=config["database"]["passwd"],

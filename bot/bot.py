@@ -31,8 +31,9 @@ class Bot(commands.Bot):
         bot.logger.info(f"{self.user.name} is ready now!")
         for idx, guild in enumerate(self.guilds):
             bot.logger.info(f"{idx+1}. {guild.name}")
-            self.refresh_levels(guild)
-            self.set_voice_join_time(guild)
+            if guild.id == 1207776900785643541:
+                self.refresh_levels(guild)
+                self.set_voice_join_time(guild)
     
     # Set voice_join_time for members who are currently on voice
     def set_voice_join_time(self, guild: discord.Guild):

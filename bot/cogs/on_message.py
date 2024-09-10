@@ -55,7 +55,6 @@ class OnMessage(commands.Cog):
             # Update messages_count
             query_result.messages_count += 1
 
-
             if diff_sec > self.bot.MESSAGE_DELAY:
                 # Update xp
                 query_result.xp += xpGain
@@ -108,11 +107,11 @@ class OnMessage(commands.Cog):
                         embed.set_author(name=f"Nowy poziom", icon_url=message.author.avatar.url)
 
                         await message.channel.send(embed=embed)
-                else:
-                    self.logger.info(f"{message.author.name}({message.author.id}): Need to wait {self.bot.MESSAGE_DELAY - diff_sec}")
+            else:
+                self.logger.info(f"{message.author.name}({message.author.id}): Need to wait {self.bot.MESSAGE_DELAY - diff_sec}")
                     
-                # Commit changes
-                self.session_manager.session.commit()
+            # Commit changes
+            self.session_manager.session.commit()
         else: 
             try:
                 new_member = self.session_manager.create_new_member(id=message.author.id, last_date=datetime.now(), xp=xpGain, messages_count=1)
