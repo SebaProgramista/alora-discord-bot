@@ -7,7 +7,9 @@
 </h4>
 
 <p align="center">
-  <img src="https://img.shields.io/discord/1207776900785643541?style=flat&logo=discord&logoColor=%23ffffff&label=Alora%20%F0%9F%87%B5%F0%9F%87%B1&labelColor=%23697ec4&color=%237289da">
+  <a href="https://discord.gg/CaJvbtyFnw">
+    <img src="https://img.shields.io/discord/1207776900785643541?style=flat&logo=discord&logoColor=%23ffffff&label=Alora%20%F0%9F%87%B5%F0%9F%87%B1&labelColor=%23697ec4&color=%237289da">
+  </a>
 </p>
 
 <p align="center">
