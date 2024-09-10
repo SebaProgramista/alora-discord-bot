@@ -54,6 +54,7 @@ class Profile(commands.Cog):
         else:
             for i, level in enumerate(levels_query_result):
                 if level.role_id == level_role.id:
+                    current_level = levels_query_result[i]
                     if i + 1 < len(levels_query_result):
                         next_level = levels_query_result[i + 1]
                     break
@@ -66,7 +67,9 @@ class Profile(commands.Cog):
             embed.add_field(name="<:emojired:1275843612566880309> **Aktualny poziom**", value=f"{self.bot.EMPTY}{self.bot.BULLET}`{level_role.name}`!", inline=False)
 
         # Dodanie informacji o kolejnym poziomie (jeśli istnieje)
-        if next_level:
+        if next_level != None and current_level != None:
+            embed.add_field(name=f"<:7956education:1275828349301948467> **Postęp kolejnego poziomu** {"●" * math.floor(((user_xp - current_level.required_points)/(next_level.required_points - current_level.required_points))*10)}{"○" * (10 - math.floor(((user_xp - current_level.required_points)/(next_level.required_points - current_level.required_points))*10))} {math.floor(((user_xp - current_level.required_points)/(next_level.required_points - current_level.required_points))*100)}%", value="", inline=False)
+        elif next_level != None:
             embed.add_field(name=f"<:7956education:1275828349301948467> **Postęp kolejnego poziomu** {"●" * math.floor((user_xp/next_level.required_points)*10)}{"○" * (10 - math.floor((user_xp/next_level.required_points)*10))} {math.floor((user_xp/next_level.required_points)*100)}%", value="", inline=False)
 
         await interaction.response.send_message(embed=embed)
