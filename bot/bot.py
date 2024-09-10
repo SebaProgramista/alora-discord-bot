@@ -67,7 +67,6 @@ class Bot(commands.Bot):
             session_manager.session.commit()
             logger.info("Levels have been refreshed")
 
-
 bot = Bot()
 # bot.db_manager = db_manager
 bot.session_manager = session_manager

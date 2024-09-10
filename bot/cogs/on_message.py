@@ -115,7 +115,7 @@ class OnMessage(commands.Cog):
                 self.session_manager.session.commit()
         else: 
             try:
-                new_member = self.session_manager.create_new_member(id=message.author.id, last_date=datetime.now(), xp=xpGain)
+                new_member = self.session_manager.create_new_member(id=message.author.id, last_date=datetime.now(), xp=xpGain, messages_count=1)
                 self.session_manager.session.add(new_member)
             except SQLAlchemyError as e:
                 self.logger.error(f"{e}")

@@ -1,7 +1,7 @@
 import sqlalchemy as db
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean, DateTime, BigInteger
 
 import json
 
@@ -9,22 +9,22 @@ config = json.load(open(".config.json"))
 
 Base = declarative_base()
 
-# url_object = URL.create(
-#     "mysql",
-#     host=config["database"]["host"],
-#     username=config["database"]["user"],
-#     password=config["database"]["passwd"],
-#     database=config["database"]["database"]
-# )
+url_object = URL.create(
+    "mysql",
+    host=config["database"]["host"],
+    username=config["database"]["user"],
+    password=config["database"]["passwd"],
+    database=config["database"]["database"]
+)
 
-url_object = "sqlite:///.database.db"
+# url_object = "sqlite:///.database.db"
 
 engine = create_engine(url_object)
 
 class Member(Base):
     __tablename__ = "members"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     last_date = Column(DateTime)
     send = Column(Boolean)
     xp = Column(Integer)
@@ -38,7 +38,7 @@ class Member(Base):
 class Level(Base):
     __tablename__ = "levels"
 
-    role_id = Column(Integer, primary_key=True)
+    role_id = Column(BigInteger, primary_key=True)
     required_points = Column(Integer)
 
     def __repr__(self) -> str:
