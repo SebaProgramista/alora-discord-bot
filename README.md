@@ -24,7 +24,7 @@ soon
 soon
 
 ## Support and Contact
-If you encounter any issues or have ideas for new features, please contact me or open an issue in the GitHub Issues section.
+If you encounter any issues or have ideas for new features, please contact me (discord: mrprofessor_) or open an issue in the GitHub Issues section.
 
 ## Contribution
 We encourage community members to contribute to Eliora! If you have an idea for a new feature or notice a bug, feel free to open an issue or create a pull request.
