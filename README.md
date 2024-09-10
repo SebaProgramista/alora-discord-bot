@@ -7,7 +7,7 @@
 </h4>
 
 <p align="center">
-  <img src="https://img.shields.io/discord/1207776900785643541?style=flat&logo=discord&logoColor=%23ffffff&label=Discord&labelColor=%23697ec4&color=%237289da">
+  <img src="https://img.shields.io/discord/1207776900785643541?style=flat&logo=discord&logoColor=%23ffffff&label=Alora%20%F0%9F%87%B5%F0%9F%87%B1&labelColor=%23697ec4&color=%237289da">
 </p>
 
 <p align="center">
