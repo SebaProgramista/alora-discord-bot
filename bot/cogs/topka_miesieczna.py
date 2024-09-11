@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import asc, desc
 
 from datetime import datetime
+from datetime import timedelta
 
 class TopkaMiesieczna(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -25,10 +26,10 @@ class TopkaMiesieczna(commands.Cog):
         embed.set_author(name=f"Topka użytkowników serwera {interaction.user.guild.name} na miesiac {datetime.now().month}.{datetime.now().year}", icon_url=interaction.user.guild.icon.url)
         
         try:
-            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.messages_count)).all()
+            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.messages_count)).limit(10).all()
             top_text_members = ""
             for idx, member in enumerate(members_query):
-                top_text_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(int(member.id)).name}`: {member.messages_count} wiadomosci"
+                top_text_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(member.id)}`: {member.messages_count} wiadomosci"
 
                 if member.id == interaction.user.id: 
                     personal_rank_text = idx
@@ -42,10 +43,13 @@ class TopkaMiesieczna(commands.Cog):
             self.logger.debug(f"personal_count_text | {personal_count_text}")
 
         try:
-            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.voice_time)).all()
+            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.voice_time)).limit(10).all()
             top_voice_members = ""
             for idx, member in enumerate(members_query):
-                top_voice_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(int(member.id)).name}`: {member.voice_time} wiadomosci"
+                if member.voice_time == 0:
+                    continue
+                
+                top_voice_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(member.id)}`: {timedelta(seconds=member.voice_time)}"
 
                 if member.id == interaction.user.id: 
                     personal_rank_voice = idx
@@ -59,7 +63,7 @@ class TopkaMiesieczna(commands.Cog):
             self.logger.debug(f"personal_count_voice | {personal_count_voice}")
 
             # Add fields to embed
-            embed.add_field(name=f"<:emojired:1275843612566880309> **Personalny ranking**", value=f"{self.bot.EMPTY}{self.bot.BULLET}Podczas aktualnego miesiąca udało Ci się wysłać `{personal_count_text} wiadomości` co usytuowało Cię na `{personal_rank_text+1}` miejscu oraz rozmawiałeś `{personal_count_voice} sekund` ze znajomymi, że skończyłeś na miejscu `{personal_rank_voice+1}`", inline=False)
+            embed.add_field(name=f"<:emojired:1275843612566880309> **Personalny ranking**", value=f"{self.bot.EMPTY}{self.bot.BULLET}Podczas aktualnego miesiąca udało Ci się wysłać `{personal_count_text} wiadomości` co usytuowało Cię na `{personal_rank_text+1}` miejscu oraz rozmawiałeś `{timedelta(seconds=personal_count_voice)}` ze znajomymi co sprawiło, że skończyłeś na miejscu `{personal_rank_voice+1}`", inline=False)
             embed.add_field(name=f"<:forumred:1275854320591704156> **Ranking tekstowy 1-10**", value=top_text_members, inline=False)
             embed.add_field(name=f"<:forumred:1275854320591704156> **Ranking voicechat 1-10**", value=top_voice_members, inline=False)
 

@@ -56,6 +56,9 @@ class OnMessage(commands.Cog):
             query_result.messages_count += 1
 
             if diff_sec > self.bot.MESSAGE_DELAY:
+                # Info got xp
+                self.logger.info(f"{message.author.name}({message.author.id}): Got {xpGain} xp")
+
                 # Update xp
                 query_result.xp += xpGain
 
@@ -63,7 +66,7 @@ class OnMessage(commands.Cog):
                 query_result.last_date = datetime.now()
 
                 # Get levels
-                level_query_result = self.session_manager.session.query(self.session_manager.level).filter(self.session_manager.level.required_points <= query_result.xp).order_by(asc(self.session_manager.level.required_points)).limit(1).one_or_none()
+                level_query_result = self.session_manager.session.query(self.session_manager.level).filter(self.session_manager.level.required_points <= query_result.xp).order_by(desc(self.session_manager.level.required_points)).limit(1).one_or_none()
                 
                 # Debug levels_query_result
                 self.logger.debug(f"levels_query_result | {level_query_result}")

@@ -21,7 +21,7 @@ class Topka(commands.Cog):
         embed.set_author(name=f"Topka użytkowników serwera {interaction.user.guild.name}", icon_url=interaction.user.guild.icon.url)
 
         try:
-            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.xp)).all()
+            members_query = self.session_manager.session.query(self.session_manager.member).order_by(desc(self.session_manager.member.xp)).limit(10).all()
             personal_rank = None
             top_members = ""
             for idx, member in enumerate(members_query):
@@ -29,7 +29,7 @@ class Topka(commands.Cog):
                 self.logger.debug(f"{idx} {member}")
 
                 # Add new member to ranking
-                top_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(int(member.id)).name}`: {member.xp} XP"
+                top_members += f"\n{self.bot.EMPTY}{self.bot.BULLET}{idx+1}. `{interaction.user.guild.get_member(member.id)}`: {member.xp} XP"
 
                 # Check if member is an author of interaction and set variables
                 if member.id == interaction.user.id: 
