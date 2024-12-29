@@ -39,6 +39,7 @@ class Bot(commands.Bot):
         for member in self.get_guild(guild.id).members:
             if member.voice != None:
                 try:
+                    logger.debug(f"[set_voice_join_time] [member.name] {member.name}")
                     query_result = session_manager.session.query(session_manager.member).filter_by(id=member.id).one_or_none()
                     query_result.voice_join_time = datetime.now()
                 except SQLAlchemyError as e:
