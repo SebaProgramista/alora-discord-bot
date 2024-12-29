@@ -1,6 +1,6 @@
 .config.json
 serviceAccountKey.json
-database.db
+.database.db
 
 /venv
 /bot/load_database.py
