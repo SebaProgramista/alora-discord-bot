@@ -9,15 +9,16 @@ config = json.load(open(".config.json"))
 
 Base = declarative_base()
 
-url_object = URL.create(
-    "mysql",
-    host=config["database"]["host"],
-    username=config["database"]["user"],
-    password=config["database"]["passwd"],
-    database=config["database"]["database"]
-)
-
-# url_object = "sqlite:///.database.db"
+if config["debugMode"]:
+    url_object = "sqlite:///.database.db"
+else:
+    url_object = URL.create(
+        "mysql",
+        host=config["database"]["host"],
+        username=config["database"]["user"],
+        password=config["database"]["passwd"],
+        database=config["database"]["database"]
+    )
 
 engine = create_engine(url_object)
 
