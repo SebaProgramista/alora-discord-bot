@@ -9,16 +9,14 @@ config = json.load(open(".config.json"))
 
 Base = declarative_base()
 
-if config["debugMode"]:
-    url_object = "sqlite:///.database.db"
-else:
-    url_object = URL.create(
-        "mysql",
-        host=config["database"]["host"],
-        username=config["database"]["user"],
-        password=config["database"]["passwd"],
-        database=config["database"]["database"]
-    )
+url_object = URL.create(
+    "mysql",
+    host=config["database"]["host"],
+    username=config["database"]["user"],
+    password=config["database"]["passwd"],
+    database=config["database"]["database"]
+)
+# url_object = "sqlite:///.database.db"
 
 engine = create_engine(url_object)
 
@@ -27,7 +25,6 @@ class Member(Base):
 
     id = Column(BigInteger, primary_key=True)
     last_date = Column(DateTime)
-    send = Column(Boolean)
     xp = Column(Integer)
     voice_join_time = Column(DateTime)
     voice_time = Column(Integer)
