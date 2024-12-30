@@ -16,6 +16,13 @@ class OnMessage(commands.Cog):
         self.logger = self.bot.logger
 
         self.session_manager = self.bot.session_manager
+        
+    def calc_xp_gain(self, min, max, message: discord.Message):
+        xp_gain = round(random.uniform(min, max), 4)
+        role = get(message.author.guild.roles, id=int(self.bot.REVIEWER_ROLE_ID))
+        if role in message.author.roles:
+            xp_gain *= 1.02
+        return xp_gain
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -28,7 +35,7 @@ class OnMessage(commands.Cog):
         if message.author.bot == True: return
         
         # Set random xp gain
-        xpGain = round(random.uniform(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN), 4)
+        xpGain = self.calc_xp_gain(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN, message)
 
         # Debug xpGain
         self.logger.debug(f"xpGain | {xpGain}")
