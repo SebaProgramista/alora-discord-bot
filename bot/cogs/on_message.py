@@ -28,7 +28,7 @@ class OnMessage(commands.Cog):
         if message.author.bot == True: return
         
         # Set random xp gain
-        xpGain = math.floor(random.randint(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN))
+        xpGain = round(random.uniform(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN), 4)
 
         # Debug xpGain
         self.logger.debug(f"xpGain | {xpGain}")

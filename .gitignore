@@ -1,4 +1,6 @@
 .config.json
+.config_test.json
+test_bot.py
 serviceAccountKey.json
 database.db
 

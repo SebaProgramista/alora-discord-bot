@@ -83,7 +83,6 @@ bot.EMPTY = config["statics"]["emojisIDs"]["empty"]
 bot.BULLET = config["statics"]["emojisIDs"]["bullet"]
 bot.DIVIDER = config["statics"]["emojisIDs"]["divider"]
 
-print("run")
 bot.run(config["discordToken"])
 
 try:

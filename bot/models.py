@@ -1,7 +1,7 @@
 import sqlalchemy as db
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean, DateTime, BigInteger
+from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean, DateTime, BigInteger, Float
 
 import json
 
@@ -9,14 +9,14 @@ config = json.load(open(".config.json"))
 
 Base = declarative_base()
 
-url_object = URL.create(
-    "mysql",
-    host=config["database"]["host"],
-    username=config["database"]["user"],
-    password=config["database"]["passwd"],
-    database=config["database"]["database"]
-)
-# url_object = "sqlite:///.database.db"
+# url_object = URL.create(
+#     "mysql",
+#     host=config["database"]["host"],
+#     username=config["database"]["user"],
+#     password=config["database"]["passwd"],
+#     database=config["database"]["database"]
+# )
+url_object = "sqlite:///database.db"
 
 engine = create_engine(url_object)
 
@@ -25,13 +25,13 @@ class Member(Base):
 
     id = Column(BigInteger, primary_key=True)
     last_date = Column(DateTime)
-    xp = Column(Integer)
+    xp = Column(Float)
     voice_join_time = Column(DateTime)
     voice_time = Column(Integer)
     messages_count = Column(Integer)
 
     def __repr__(self) -> str:
-        return f"<Member id: {self.id}, last_date: {self.last_date}, send: {self.send}, xp: {self.xp}, voice_join_time: {self.voice_join_time}>, voice_time: {self.voice_time}, messages_count: {self.messages_count}"
+        return f"<Member id: {self.id}, last_date: {self.last_date}, xp: {self.xp}, voice_join_time: {self.voice_join_time}>, voice_time: {self.voice_time}, messages_count: {self.messages_count}"
 
 class Level(Base):
     __tablename__ = "levels"
