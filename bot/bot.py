@@ -78,6 +78,9 @@ bot.MIN_XP_GAIN = config["serverConfig"]["minXpGain"]
 bot.MAX_XP_GAIN = config["serverConfig"]["maxXpGain"]
 bot.MESSAGE_DELAY = config["serverConfig"]["messageDelay"]
 
+# Roles
+bot.REVIEWER_ROLE_ID = config["serverRoles"]["ReviewerRoleID"]
+
 # Emojies
 bot.EMPTY = config["statics"]["emojisIDs"]["empty"]
 bot.BULLET = config["statics"]["emojisIDs"]["bullet"]
