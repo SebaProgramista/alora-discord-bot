@@ -19,9 +19,12 @@ class OnMessage(commands.Cog):
         
     def calc_xp_gain(self, min, max, message: discord.Message):
         xp_gain = round(random.uniform(min, max), 4)
+        self.logger.debug(f"[var: 'xp_gain' without any bonus] {xp_gain}")
         role = get(message.author.guild.roles, id=int(self.bot.REVIEWER_ROLE_ID))
         if role in message.author.roles:
             xp_gain *= 1.02
+            self.logger.debug(f"[value: 'xp bonus from reviewer role'] {xp_gain * 0.02}")
+        self.logger.debug(f"[var: 'xp_gain'] {xp_gain}")
         return xp_gain
 
     @commands.Cog.listener()
