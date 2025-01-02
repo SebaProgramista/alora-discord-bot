@@ -29,44 +29,44 @@ class OnMessage(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        self.logger.debug(f"message | {message}")
+        self.logger.debug(f"[var: message] {message}")
 
         # Stop function if on dm channel
         if type(message.channel) == discord.channel.DMChannel: return
 
         # Stop function beacuse of bot's messages
         if message.author.bot == True: return
-        
-        # Set random xp gain
-        xpGain = self.calc_xp_gain(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN, message)
-
-        # Debug xpGain
-        self.logger.debug(f"xpGain | {xpGain}")
 
         # Mysql query
         query_result = self.session_manager.session.query(self.session_manager.member).filter_by(id=message.author.id).one_or_none()
 
         # Debug query_result
-        self.logger.debug(f"query_result | {query_result}")
+        self.logger.debug(f"[value: 'query_result'] {query_result}")
 
         if query_result != None:
             # Debug datetime.now()
-            self.logger.debug(f"datetime.now() | {datetime.now()}")
+            self.logger.debug(f"[value: 'datetime.now()'] {datetime.now()}")
             
             # Debug query_result.last_date
-            self.logger.debug(f"query_result.last_date | f{query_result.last_date}")
+            self.logger.debug(f"[var: 'query_result.last_date'] {query_result.last_date}")
 
             # Calculate diff_sec
             diff_sec = (datetime.now() - query_result.last_date).seconds
 
             # Debug diff_sec
-            self.logger.debug(f"diff_sec | {diff_sec}")
+            self.logger.debug(f"[var: 'diff_sec'] {diff_sec}")
 
             # Update messages_count
             query_result.messages_count += 1
 
 
             if diff_sec > self.bot.MESSAGE_DELAY:
+                # Set random xp gain
+                xpGain = self.calc_xp_gain(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN, message)
+
+                # Debug xpGain
+                self.logger.debug(f"[var: 'xpGain'] {xpGain}")
+                
                 # Update xp
                 query_result.xp += xpGain
 
@@ -77,7 +77,7 @@ class OnMessage(commands.Cog):
                 level_query_result = self.session_manager.session.query(self.session_manager.level).filter(self.session_manager.level.required_points <= query_result.xp).order_by(asc(self.session_manager.level.required_points)).limit(1).one_or_none()
                 
                 # Debug levels_query_result
-                self.logger.debug(f"levels_query_result | {level_query_result}")
+                self.logger.debug(f"[var: 'level_query_result'] {level_query_result}")
                 
                 # Add new role and remove old one
                 temp = 0
@@ -85,7 +85,7 @@ class OnMessage(commands.Cog):
                     new_role = get(message.author.guild.roles, id=int(level_query_result.role_id))   
 
                     # Debug new_role
-                    self.logger.debug(f"new_role | {new_role}")
+                    self.logger.debug(f"[var: 'new_role'] {new_role}")
 
                     for author_role in message.author.roles:
                         if "Poziom" in author_role.name:
