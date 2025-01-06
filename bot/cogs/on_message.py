@@ -25,7 +25,7 @@ class OnMessage(commands.Cog):
             xp_gain *= 1.02
             self.logger.debug(f"[value: 'xp bonus from reviewer role'] {xp_gain * 0.02}")
         self.logger.debug(f"[var: 'xp_gain'] {xp_gain}")
-        return xp_gain
+        return math.floor(xp_gain, 2)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -59,10 +59,12 @@ class OnMessage(commands.Cog):
             # Update messages_count
             query_result.messages_count += 1
 
-
             if diff_sec > self.bot.MESSAGE_DELAY:
                 # Set random xp gain
                 xpGain = self.calc_xp_gain(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN, message)
+
+                # Info xpGain
+                self.logger.info(f"{message.author.name}({message.author.id}): Got {xpGain} xp")
 
                 # Debug xpGain
                 self.logger.debug(f"[var: 'xpGain'] {xpGain}")
@@ -131,11 +133,11 @@ class OnMessage(commands.Cog):
                         embed.set_author(name=f"Nowy poziom", icon_url=message.author.avatar.url)
 
                         await message.channel.send(embed=embed)
-                else:
-                    self.logger.info(f"{message.author.name}({message.author.id}): Need to wait {self.bot.MESSAGE_DELAY - diff_sec}")
-                    
+                        
                 # Commit changes
                 self.session_manager.session.commit()
+            else:
+                self.logger.info(f"{message.author.name}({message.author.id}): Need to wait {self.bot.MESSAGE_DELAY - diff_sec}")
         else: 
             try:
                 # Set random xp gain
