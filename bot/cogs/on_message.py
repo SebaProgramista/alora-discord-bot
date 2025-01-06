@@ -74,7 +74,7 @@ class OnMessage(commands.Cog):
                 query_result.last_date = datetime.now()
 
                 # Get levels
-                level_query_result = self.session_manager.session.query(self.session_manager.level).filter(self.session_manager.level.required_points <= query_result.xp).order_by(asc(self.session_manager.level.required_points)).limit(1).one_or_none()
+                level_query_result = self.session_manager.session.query(self.session_manager.level).filter(self.session_manager.level.required_points <= query_result.xp).order_by(desc(self.session_manager.level.required_points)).limit(1).one_or_none()
                 
                 # Debug levels_query_result
                 self.logger.debug(f"[var: 'level_query_result'] {level_query_result}")
@@ -94,6 +94,19 @@ class OnMessage(commands.Cog):
 
                                 # Add new role
                                 await message.author.add_roles(new_role)
+                                
+                                # Add new privileges
+                                if "Poziom 1 " in new_role.name:
+                                    await message.author.add_roles(get(message.author.guild.roles, id=int(self.bot.FIRST_PRIVILIGE_ROLE_ID)))
+                                elif "Poziom 10" in new_role.name:
+                                    await message.author.add_roles(get(message.author.guild.roles, id=int(self.bot.SECOND_PRIVILIGE_ROLE_ID)))
+                                    await message.author.remove_roles(get(message.author.guild.roles, id=int(self.bot.FIRST_PRIVILIGE_ROLE_ID)))
+                                elif "Poziom 25" in new_role.name:
+                                    await message.author.add_roles(get(message.author.guild.roles, id=int(self.bot.THIRD_PRIVILIGE_ROLE_ID)))
+                                    await message.author.remove_roles(get(message.author.guild.roles, id=int(self.bot.SECOND_PRIVILIGE_ROLE_ID)))
+                                elif "Poziom 50" in new_role.name:
+                                    await message.author.add_roles(get(message.author.guild.roles, id=int(self.bot.FOURTH_PRIVILIGE_ROLE_ID)))
+                                    await message.author.remove_roles(get(message.author.guild.roles, id=int(self.bot.THIRD_PRIVILIGE_ROLE_ID)))
 
                                 # Remove old one
                                 await message.author.remove_roles(author_role)
@@ -125,6 +138,9 @@ class OnMessage(commands.Cog):
                 self.session_manager.session.commit()
         else: 
             try:
+                # Set random xp gain
+                xpGain = self.calc_xp_gain(self.bot.MIN_XP_GAIN, self.bot.MAX_XP_GAIN, message)
+                
                 new_member = self.session_manager.create_new_member(id=message.author.id, last_date=datetime.now(), xp=xpGain, messages_count=1)
                 self.session_manager.session.add(new_member)
             except SQLAlchemyError as e:

@@ -87,6 +87,10 @@ bot.MESSAGE_DELAY = config["serverConfig"]["messageDelay"]
 
 # Roles
 bot.REVIEWER_ROLE_ID = config["serverRoles"]["ReviewerRoleID"]
+bot.FIRST_PRIVILIGE_ROLE_ID = config["serverRoles"]["FirstPriviligeRoleID"]
+bot.SECOND_PRIVILIGE_ROLE_ID = config["serverRoles"]["SecondPriviligeRoleID"]
+bot.THIRD_PRIVILIGE_ROLE_ID = config["serverRoles"]["ThirdPriviligeRoleID"]
+bot.FOURTH_PRIVILIGE_ROLE_ID = config["serverRoles"]["FourthPriviligeRoleID"]
 
 # Emojies
 bot.EMPTY = config["statics"]["emojisIDs"]["empty"]

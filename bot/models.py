@@ -39,7 +39,7 @@ class Level(Base):
     __tablename__ = "levels"
 
     role_id = Column(BigInteger, primary_key=True)
-    required_points = Column(Integer)
+    required_points = Column(Float)
 
     def __repr__(self) -> str:
         return f"<Level role_id: {self.role_id}, required_points: {self.required_points}>"
